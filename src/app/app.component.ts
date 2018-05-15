@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  const weekDays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  weekDays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
   dataPresent: any; 
 
@@ -27,23 +27,22 @@ export class AppComponent implements OnInit {
   fetchMessageFromServer() {
     this.http.get('http://uinames.com/api/?ext&amount=25')
       .subscribe(data => {
-        if (null === data) return;
-
-        data.forEach(d => {
-          this.i += 1;
+        if (!Array.isArray(data)) return;
+        const result = Array.from(data);
+        result.forEach(r => {
           let weekd = this.weekDayName(
-            this.dateConvert(d.birthday.raw)
+            this.dateConvert(r.birthday.raw)
           );
-          this.attachObjectToWeekday(weekd, d);
+          this.attachObjectToWeekday(weekd, r);
         });
       });
   }
 
-  weekDayName(day: int) {
+  weekDayName(day: number) {
     return this.weekDays[day];
   }
 
-  dateConvert(rawInt: int) {
+  dateConvert(rawInt: number) {
     return (new Date(rawInt)).getDay();
   }
 
